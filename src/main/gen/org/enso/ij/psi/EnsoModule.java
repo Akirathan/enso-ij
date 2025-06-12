@@ -11,9 +11,6 @@ public interface EnsoModule extends PsiElement {
   List<EnsoBinding> getBindingList();
 
   @NotNull
-  List<EnsoEolWithComment> getEolWithCommentList();
-
-  @NotNull
   List<EnsoExportRule> getExportRuleList();
 
   @NotNull

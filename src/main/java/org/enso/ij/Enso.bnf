@@ -84,7 +84,7 @@ private import_or_export ::= (
   from_import|
   export_rule|
   from_export|
-  eol_with_comment
+  MULTILINE_COMMENT
 )
 
 fully_qualified_name ::=
@@ -106,7 +106,7 @@ operator ::= PLUS|MINUS|STAR|DIV|AND|OR
 binding ::= (
   method |
   extension_method |
-  eol_with_comment
+  MULTILINE_COMMENT
 )
 
 assignment ::= (

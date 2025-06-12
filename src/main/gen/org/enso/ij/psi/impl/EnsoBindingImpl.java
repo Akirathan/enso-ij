@@ -29,12 +29,6 @@ public class EnsoBindingImpl extends ASTWrapperPsiElement implements EnsoBinding
 
   @Override
   @Nullable
-  public EnsoEolWithComment getEolWithComment() {
-    return findChildByClass(EnsoEolWithComment.class);
-  }
-
-  @Override
-  @Nullable
   public EnsoExtensionMethod getExtensionMethod() {
     return findChildByClass(EnsoExtensionMethod.class);
   }
@@ -43,6 +37,12 @@ public class EnsoBindingImpl extends ASTWrapperPsiElement implements EnsoBinding
   @Nullable
   public EnsoMethod getMethod() {
     return findChildByClass(EnsoMethod.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getMultilineComment() {
+    return findChildByType(MULTILINE_COMMENT);
   }
 
 }

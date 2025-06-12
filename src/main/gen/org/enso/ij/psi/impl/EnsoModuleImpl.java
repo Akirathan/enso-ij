@@ -35,12 +35,6 @@ public class EnsoModuleImpl extends ASTWrapperPsiElement implements EnsoModule {
 
   @Override
   @NotNull
-  public List<EnsoEolWithComment> getEolWithCommentList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoEolWithComment.class);
-  }
-
-  @Override
-  @NotNull
   public List<EnsoExportRule> getExportRuleList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoExportRule.class);
   }

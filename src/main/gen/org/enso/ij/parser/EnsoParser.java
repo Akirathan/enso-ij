@@ -104,15 +104,15 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // method |
   //   extension_method |
-  //   eol_with_comment
+  //   MULTILINE_COMMENT
   public static boolean binding(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "binding")) return false;
-    if (!nextTokenIs(b, "<binding>", EOL, IDENTIFIER)) return false;
+    if (!nextTokenIs(b, "<binding>", IDENTIFIER, MULTILINE_COMMENT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, BINDING, "<binding>");
     r = method(b, l + 1);
     if (!r) r = extension_method(b, l + 1);
-    if (!r) r = eol_with_comment(b, l + 1);
+    if (!r) r = consumeToken(b, MULTILINE_COMMENT);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -416,7 +416,7 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   //   from_import|
   //   export_rule|
   //   from_export|
-  //   eol_with_comment
+  //   MULTILINE_COMMENT
   static boolean import_or_export(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "import_or_export")) return false;
     boolean r;
@@ -424,7 +424,7 @@ public class EnsoParser implements PsiParser, LightPsiParser {
     if (!r) r = from_import(b, l + 1);
     if (!r) r = export_rule(b, l + 1);
     if (!r) r = from_export(b, l + 1);
-    if (!r) r = eol_with_comment(b, l + 1);
+    if (!r) r = consumeToken(b, MULTILINE_COMMENT);
     return r;
   }
 

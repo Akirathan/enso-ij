@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 public interface EnsoBinding extends PsiElement {
 
   @Nullable
-  EnsoEolWithComment getEolWithComment();
-
-  @Nullable
   EnsoExtensionMethod getExtensionMethod();
 
   @Nullable
   EnsoMethod getMethod();
+
+  @Nullable
+  PsiElement getMultilineComment();
 
 }
