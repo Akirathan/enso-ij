@@ -1,0 +1,152 @@
+/**
+* Inspired by https://github.com/JetBrains/intellij-community/blob/master/python/python-parser/src/com/jetbrains/python/lexer/Python.flex
+* https://github.com/JetBrains/intellij-community/blob/master/plugins/groovy/groovy-psi/src/org/jetbrains/plugins/groovy/lang/lexer/groovy.flex
+* https://github.com/JetBrains/intellij-community/blob/master/plugins/groovy/groovy-psi/src/org/jetbrains/plugins/groovy/lang/parser/groovy.bnf
+* https://github.com/JetBrains/intellij-community/blob/master/json/json.bnf
+*/
+
+{
+  parserClass="org.enso.ij.parser.EnsoParser"
+  parserUtilClass="org.enso.ij.parser.EnsoParserUtil"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Enso"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.enso.ij.psi"
+  psiImplPackage="org.enso.ij.psi.impl"
+  elementTypeHolderClass="org.enso.ij.psi.EnsoTypes"
+  elementTypeClass="org.enso.ij.psi.EnsoElementType"
+  tokenTypeClass="org.enso.ij.psi.EnsoTokenType"
+
+  tokens = [
+    // Defined in _EnsoLexer.flex
+    MULTILINE_COMMENT
+    COMMENT = 'regexp:#.*'
+    MULTILINE_COMMENT_START = 'regexp:[ \t]*##[^\n\r]*'
+
+    EOL = 'regexp:\R'
+    WHITE_SPACE = 'regexp:\s+'
+
+    IDENTIFIER = 'regexp:[a-zA-Z_][a-zA-Z_0-9]*'
+    NUMBER = 'regexp:[0-9]+(\.[0-9]+)?'
+
+    STRING_DOUBLE = 'regexp:"([^"\\]|\\\\.)*"'
+    STRING_SINGLE = "regexp:'([^'\\]|\\\\.)*'"
+
+    // Reserved keywords
+    IMPORT = "import"
+    EXPORT = "export"
+    ALL = "all"
+    AS = "as"
+    FROM = "from"
+    SELF = "self"
+    TYPE = "type"
+    NOT = "not"
+    TYPE = "type"
+    
+    EQUALS = "="
+    COLON = ":"
+    DOT = "."
+    COMMA = ","
+
+    PLUS = "+"
+    MINUS = "-"
+    STAR = "*"
+    DIV = "/"
+    AND = "&&"
+    OR = "||"
+    LEFT_PAREN = "("
+    RIGHT_PAREN = ")"
+  ]
+  // Note that MULTILINE_COMMENT is not skipped
+  // it may be a doc comment
+  skip = [
+    COMMENT
+    WHITE_SPACE
+  ]
+}
+
+
+root ::= module
+//root ::= from_import
+
+eol_with_comment ::= EOL [MULTILINE_COMMENT]
+
+module ::= import_or_export* binding*
+
+identifier ::= IDENTIFIER {
+  implements="org.enso.ij.psi.EnsoNamedElement"
+}
+
+private import_or_export ::= (
+  import_rule|
+  from_import|
+  export_rule|
+  from_export|
+  eol_with_comment
+)
+
+fully_qualified_name ::=
+    identifier (DOT identifier)*
+
+import_rule ::= IMPORT fully_qualified_name
+from_import ::= FROM fully_qualified_name IMPORT (identifier_list|ALL) [AS identifier]
+export_rule ::= EXPORT fully_qualified_name
+from_export ::= FROM fully_qualified_name EXPORT identifier_list
+
+private identifier_list ::= identifier (COMMA identifier)*
+
+type_definition ::= TYPE identifier type_body
+type_body ::= type_constructor* method*
+type_constructor ::= identifier (argument_def)*
+
+operator ::= PLUS|MINUS|STAR|DIV|AND|OR
+
+binding ::= (
+  method |
+  extension_method |
+  eol_with_comment
+)
+
+assignment ::= (
+  identifier EQUALS expression
+)
+
+method ::= identifier (argument_def)* EQUALS method_body
+extension_method ::= identifier DOT identifier (argument_def)* EQUALS method_body
+
+argument_def ::= identifier [type_ascription] (EQUALS default_value)?
+default_value ::= expression
+type_ascription ::= COLON identifier
+
+method_body ::= expression*
+
+expression ::= (
+    assignment |
+    binary_op |
+    literal |
+    method_call |
+    LEFT_PAREN expression RIGHT_PAREN |
+    eol_with_comment
+)
+
+
+method_call ::= fully_qualified_name call_argument*
+
+id_or_literal ::= fully_qualified_name|literal
+
+binary_op ::= id_or_literal operator id_or_literal
+
+call_argument ::= (
+    literal |
+    method_call |
+    LEFT_PAREN call_argument RIGHT_PAREN
+)
+
+literal ::= (
+    STRING_DOUBLE |
+    STRING_SINGLE |
+    NUMBER
+)
+

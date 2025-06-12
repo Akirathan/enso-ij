@@ -1,0 +1,4 @@
+from Standard.Base import all
+
+main =
+    42
