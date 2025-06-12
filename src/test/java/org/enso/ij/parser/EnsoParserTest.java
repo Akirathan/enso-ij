@@ -1,9 +1,11 @@
 package org.enso.ij.parser;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.ParsingTestCase;
 import java.util.function.Predicate;
 import org.enso.ij.psi.EnsoTypes;
@@ -39,6 +41,42 @@ public class EnsoParserTest extends ParsingTestCase {
     assertThat(multilineComment, is(notNullValue()));
   }
 
+  public void testMultilineComment_2() {
+    var code = """
+        ## comment
+           Another line of comment
+        main = 42
+        """;
+    var parsed = parseFile("Foo.enso", code);
+    var rootNode = parsed.getNode();
+    var multilineComment = findRecursively(rootNode, node -> node.getElementType() == EnsoTypes.MULTILINE_COMMENT);
+    assertThat(multilineComment, is(notNullValue()));
+    var method = findRecursively(rootNode, node -> node.getElementType() == EnsoTypes.METHOD);
+    assertThat(method, is(notNullValue()));
+    assertThat(method.getText(), is("main = 42"));
+  }
+
+  public void testImports_1() {
+    var code = """
+        from Standard.Base import all
+        import Standard.Base.Data.Vector
+        """;
+    var parsed = parseFile("Foo.enso", code);
+    var rootNode = parsed.getNode();
+    assertNoErrors(rootNode);
+    var imp = findRecursivelyByElemType(rootNode, EnsoTypes.IMPORT_RULE);
+    var fromImport = findRecursivelyByElemType(rootNode, EnsoTypes.FROM_IMPORT);
+    assertThat(imp, is(notNullValue()));
+    assertThat(fromImport, is(notNullValue()));
+    assertThat(imp.getText(), is("import Standard.Base.Data.Vector"));
+    assertThat(fromImport.getText(), is("from Standard.Base import all"));
+  }
+
+  private static void assertNoErrors(ASTNode rootNode) {
+    var errorNode = findRecursively(rootNode, node -> node.getPsi() instanceof PsiErrorElement);
+    assertThat("AST contains errors:\n" + printAST(rootNode), errorNode, is(nullValue()));
+  }
+
   @Override
   protected String getTestDataPath() {
     return "src/test/testData";
@@ -67,6 +105,10 @@ public class EnsoParserTest extends ParsingTestCase {
       printAST(child, sb, indent);
       child = child.getTreeNext();
     }
+  }
+
+  private static ASTNode  findRecursivelyByElemType(ASTNode root, IElementType elemType) {
+    return findRecursively(root, node -> node.getElementType() == elemType);
   }
 
   private static ASTNode findRecursively(ASTNode root, Predicate<ASTNode> predicate) {
