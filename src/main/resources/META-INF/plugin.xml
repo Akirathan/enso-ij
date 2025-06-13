@@ -39,5 +39,9 @@
       language="Enso"
       implementationClass="org.enso.ij.EnsoSyntaxHighlighterFactory"
     />
+    <lang.psiStructureViewFactory
+      language="Enso"
+      implementationClass="org.enso.ij.structure.EnsoStructureViewFactory"
+      />
   </extensions>
 </idea-plugin>
