@@ -400,27 +400,15 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER {
-  //   //implements="org.enso.ij.psi.EnsoNamedElement"
-  //   //methods=[getName setName getNameIdentifier]
-  // }
+  // IDENTIFIER
   public static boolean identifier_rule(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "identifier_rule")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, IDENTIFIER);
-    r = r && identifier_rule_1(b, l + 1);
     exit_section_(b, m, IDENTIFIER_RULE, r);
     return r;
-  }
-
-  // {
-  //   //implements="org.enso.ij.psi.EnsoNamedElement"
-  //   //methods=[getName setName getNameIdentifier]
-  // }
-  private static boolean identifier_rule_1(PsiBuilder b, int l) {
-    return true;
   }
 
   /* ********************************************************** */

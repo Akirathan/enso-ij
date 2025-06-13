@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.enso.ij.psi.EnsoTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.enso.ij.psi.*;
+import com.intellij.util.IncorrectOperationException;
 
 public class EnsoIdentifierRuleImpl extends ASTWrapperPsiElement implements EnsoIdentifierRule {
 
@@ -31,6 +32,21 @@ public class EnsoIdentifierRuleImpl extends ASTWrapperPsiElement implements Enso
   @NotNull
   public PsiElement getIdentifier() {
     return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  public String getName() {
+    return EnsoPsiUtil.getName(this);
+  }
+
+  @Override
+  public PsiElement setName(String name) throws IncorrectOperationException {
+    return EnsoPsiUtil.setName(this, name);
+  }
+
+  @Override
+  public PsiElement getNameIdentifier() {
+    return EnsoPsiUtil.getNameIdentifier(this);
   }
 
 }

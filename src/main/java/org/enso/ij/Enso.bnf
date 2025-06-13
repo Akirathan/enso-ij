@@ -77,8 +77,8 @@ eol_with_comment ::= EOL [MULTILINE_COMMENT]
 module ::= import_or_export* binding*
 
 identifier_rule ::= IDENTIFIER {
-  //implements="org.enso.ij.psi.EnsoNamedElement"
-  //methods=[getName setName getNameIdentifier]
+  implements="org.enso.ij.psi.EnsoNamedElement"
+  methods=[getName setName getNameIdentifier]
 }
 
 private import_or_export ::= (

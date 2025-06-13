@@ -64,7 +64,7 @@ public class EnsoVisitor extends PsiElementVisitor {
   }
 
   public void visitIdentifierRule(@NotNull EnsoIdentifierRule o) {
-    visitPsiElement(o);
+    visitNamedElement(o);
   }
 
   public void visitImportRule(@NotNull EnsoImportRule o) {
@@ -108,6 +108,10 @@ public class EnsoVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeDefinition(@NotNull EnsoTypeDefinition o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNamedElement(@NotNull EnsoNamedElement o) {
     visitPsiElement(o);
   }
 
