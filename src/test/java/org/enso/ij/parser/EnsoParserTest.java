@@ -8,6 +8,8 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.ParsingTestCase;
 import java.util.function.Predicate;
+import org.enso.ij.psi.EnsoIdentifier;
+import org.enso.ij.psi.EnsoIdentifierRule;
 import org.enso.ij.psi.EnsoTypes;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -70,6 +72,20 @@ public class EnsoParserTest extends ParsingTestCase {
     assertThat(fromImport, is(notNullValue()));
     assertThat(imp.getText(), is("import Standard.Base.Data.Vector"));
     assertThat(fromImport.getText(), is("from Standard.Base import all"));
+  }
+
+  public void testIdentifier_IsNamed_FindByRule() {
+    var code = """
+        main = 42
+        """;
+    var parsed = parseFile("Foo.enso", code);
+    var rootNode = parsed.getNode();
+    assertNoErrors(rootNode);
+    var identifier = findRecursivelyByElemType(rootNode, EnsoTypes.IDENTIFIER_RULE);
+    assertNotNull(identifier);
+    assertThat(identifier.getPsi() instanceof EnsoIdentifierRule, is(true));
+    var ident = (EnsoIdentifierRule) identifier.getPsi();
+    assertThat(ident.getName(), is("main"));
   }
 
   private static void assertNoErrors(ASTNode rootNode) {
