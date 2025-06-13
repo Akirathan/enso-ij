@@ -7,11 +7,13 @@ import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LexerTestCase;
 import java.io.IOException;
+import java.util.List;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.enso.ij.EnsoLexerAdapter;
 import org.enso.ij._EnsoLexer;
 import org.enso.ij.psi.EnsoTokenType;
 import org.enso.ij.psi.EnsoTypes;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,18 +36,11 @@ public class EnsoLexerTest extends LexerTestCase {
 
   public void testAssignment() throws Exception {
     var input = "main = 42";
-    var lexer = createLexer();
-    lexer.start(input);
-    assertThat(lexer.getTokenType(), is(EnsoTypes.IDENTIFIER));
-    assertThat(lexer.getTokenText(), is("main"));
-    lexer.advance();
-    assertThat(lexer.getTokenType().toString(), containsString("WHITE"));
-    lexer.advance();
-    assertThat(lexer.getTokenType(), is(EnsoTypes.EQUALS));
-    lexer.advance();
-    assertThat(lexer.getTokenType().toString(), containsString("WHITE"));
-    lexer.advance();
-    assertThat(lexer.getTokenType(), is(EnsoTypes.NUMBER));
+    assertTokenTypes(input, List.of(
+        EnsoTypes.IDENTIFIER,
+        EnsoTypes.EQUALS,
+        EnsoTypes.NUMBER
+    ));
   }
 
   public void testParsesMultilineComment_Simple() {
@@ -90,13 +85,40 @@ public class EnsoLexerTest extends LexerTestCase {
         ## COM
         ident
         """;
+
+    assertTokenTypes(input, List.of(
+        EnsoTypes.MULTILINE_COMMENT,
+        EnsoTypes.IDENTIFIER
+    ));
+  }
+
+  /**
+   * Whitespaces are ignored.
+   */
+  private void assertTokenTypes(String input, List<IElementType> tokenTypes) {
     var lexer = createLexer();
     lexer.start(input);
-    assertEquals(EnsoTypes.MULTILINE_COMMENT, lexer.getTokenType());
-    lexer.advance();
-    assertThat(lexer.getTokenType().toString(), containsString("WHITE"));
-    lexer.advance();
-    assertEquals("ident", lexer.getTokenText());
+    for (var i = 0; i < tokenTypes.size(); i++) {
+      var tokenType = lexer.getTokenType();
+      if (tokenType.toString().contains("WHITE")) {
+        continue;
+      }
+      var expectedTokenType = tokenTypes.get(i);
+      assertThat("Token type mismatch at index " + i + ": " + currentTokenInfo(lexer),
+          tokenType, is(expectedTokenType));
+      lexer.advance();
+    }
+  }
+
+  private static String currentTokenInfo(Lexer lexer) {
+    var sb = new StringBuilder();
+    sb.append("Token{");
+    sb.append("type=").append(lexer.getTokenType());
+    sb.append(", start=").append(lexer.getTokenStart());
+    sb.append(", end=").append(lexer.getTokenEnd());
+    sb.append(", text='").append(lexer.getTokenText()).append('\'');
+    sb.append("}");
+    return sb.toString();
   }
 
 
