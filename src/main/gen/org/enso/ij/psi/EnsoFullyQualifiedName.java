@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface EnsoFullyQualifiedName extends PsiElement {
 
   @NotNull
-  List<EnsoIdentifier> getIdentifierList();
+  List<EnsoIdentifierRule> getIdentifierRuleList();
 
 }

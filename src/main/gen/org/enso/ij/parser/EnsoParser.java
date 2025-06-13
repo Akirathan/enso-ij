@@ -36,13 +36,13 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identifier [type_ascription] (EQUALS default_value)?
+  // identifier_rule [type_ascription] (EQUALS default_value)?
   public static boolean argument_def(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "argument_def")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && argument_def_1(b, l + 1);
     r = r && argument_def_2(b, l + 1);
     exit_section_(b, m, ARGUMENT_DEF, r);
@@ -75,13 +75,13 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identifier EQUALS expression
+  // identifier_rule EQUALS expression
   public static boolean assignment(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "assignment")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && consumeToken(b, EQUALS);
     r = r && expression(b, l + 1);
     exit_section_(b, m, ASSIGNMENT, r);
@@ -222,15 +222,15 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identifier DOT identifier (argument_def)* EQUALS method_body
+  // identifier_rule DOT identifier_rule (argument_def)* EQUALS method_body
   public static boolean extension_method(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "extension_method")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && consumeToken(b, DOT);
-    r = r && identifier(b, l + 1);
+    r = r && identifier_rule(b, l + 1);
     r = r && extension_method_3(b, l + 1);
     r = r && consumeToken(b, EQUALS);
     r = r && method_body(b, l + 1);
@@ -275,7 +275,7 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // FROM fully_qualified_name IMPORT (identifier_list|ALL) [AS identifier]
+  // FROM fully_qualified_name IMPORT (identifier_list|ALL) [AS identifier_rule]
   public static boolean from_import(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "from_import")) return false;
     if (!nextTokenIs(b, FROM)) return false;
@@ -299,38 +299,38 @@ public class EnsoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // [AS identifier]
+  // [AS identifier_rule]
   private static boolean from_import_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "from_import_4")) return false;
     from_import_4_0(b, l + 1);
     return true;
   }
 
-  // AS identifier
+  // AS identifier_rule
   private static boolean from_import_4_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "from_import_4_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, AS);
-    r = r && identifier(b, l + 1);
+    r = r && identifier_rule(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // identifier (DOT identifier)*
+  // identifier_rule (DOT identifier_rule)*
   public static boolean fully_qualified_name(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fully_qualified_name")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && fully_qualified_name_1(b, l + 1);
     exit_section_(b, m, FULLY_QUALIFIED_NAME, r);
     return r;
   }
 
-  // (DOT identifier)*
+  // (DOT identifier_rule)*
   private static boolean fully_qualified_name_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fully_qualified_name_1")) return false;
     while (true) {
@@ -341,13 +341,13 @@ public class EnsoParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // DOT identifier
+  // DOT identifier_rule
   private static boolean fully_qualified_name_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "fully_qualified_name_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, DOT);
-    r = r && identifier(b, l + 1);
+    r = r && identifier_rule(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -365,31 +365,19 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER
-  public static boolean identifier(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "identifier")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, IDENTIFIER, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // identifier (COMMA identifier)*
+  // identifier_rule (COMMA identifier_rule)*
   static boolean identifier_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "identifier_list")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && identifier_list_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // (COMMA identifier)*
+  // (COMMA identifier_rule)*
   private static boolean identifier_list_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "identifier_list_1")) return false;
     while (true) {
@@ -400,15 +388,39 @@ public class EnsoParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // COMMA identifier
+  // COMMA identifier_rule
   private static boolean identifier_list_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "identifier_list_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
-    r = r && identifier(b, l + 1);
+    r = r && identifier_rule(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  /* ********************************************************** */
+  // IDENTIFIER {
+  //   //implements="org.enso.ij.psi.EnsoNamedElement"
+  //   //methods=[getName setName getNameIdentifier]
+  // }
+  public static boolean identifier_rule(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "identifier_rule")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, IDENTIFIER);
+    r = r && identifier_rule_1(b, l + 1);
+    exit_section_(b, m, IDENTIFIER_RULE, r);
+    return r;
+  }
+
+  // {
+  //   //implements="org.enso.ij.psi.EnsoNamedElement"
+  //   //methods=[getName setName getNameIdentifier]
+  // }
+  private static boolean identifier_rule_1(PsiBuilder b, int l) {
+    return true;
   }
 
   /* ********************************************************** */
@@ -457,13 +469,13 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identifier (argument_def)* EQUALS method_body
+  // identifier_rule (argument_def)* EQUALS method_body
   public static boolean method(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "method")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && method_1(b, l + 1);
     r = r && consumeToken(b, EQUALS);
     r = r && method_body(b, l + 1);
@@ -587,14 +599,14 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // COLON identifier
+  // COLON identifier_rule
   public static boolean type_ascription(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_ascription")) return false;
     if (!nextTokenIs(b, COLON)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COLON);
-    r = r && identifier(b, l + 1);
+    r = r && identifier_rule(b, l + 1);
     exit_section_(b, m, TYPE_ASCRIPTION, r);
     return r;
   }
@@ -634,13 +646,13 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identifier (argument_def)*
+  // identifier_rule (argument_def)*
   public static boolean type_constructor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_constructor")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = identifier(b, l + 1);
+    r = identifier_rule(b, l + 1);
     r = r && type_constructor_1(b, l + 1);
     exit_section_(b, m, TYPE_CONSTRUCTOR, r);
     return r;
@@ -668,14 +680,14 @@ public class EnsoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TYPE identifier type_body
+  // TYPE identifier_rule type_body
   public static boolean type_definition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "type_definition")) return false;
     if (!nextTokenIs(b, TYPE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, TYPE);
-    r = r && identifier(b, l + 1);
+    r = r && identifier_rule(b, l + 1);
     r = r && type_body(b, l + 1);
     exit_section_(b, m, TYPE_DEFINITION, r);
     return r;

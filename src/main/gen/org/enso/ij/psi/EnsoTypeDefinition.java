@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface EnsoTypeDefinition extends PsiElement {
 
   @NotNull
-  EnsoIdentifier getIdentifier();
+  EnsoIdentifierRule getIdentifierRule();
 
   @NotNull
   EnsoTypeBody getTypeBody();

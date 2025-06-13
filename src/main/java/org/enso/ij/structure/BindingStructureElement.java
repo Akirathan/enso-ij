@@ -22,7 +22,7 @@ final class BindingStructureElement implements StructureViewTreeElement {
 
   @Override
   public @NotNull ItemPresentation getPresentation() {
-    var methodName = binding.getMethod().getIdentifier().getName();
+    var methodName = binding.getMethod().getIdentifierRule().getIdentifier();
     return new PresentationData();
   }
 

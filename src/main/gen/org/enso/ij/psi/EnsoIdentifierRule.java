@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface EnsoAssignment extends PsiElement {
+public interface EnsoIdentifierRule extends PsiElement {
 
   @NotNull
-  EnsoExpression getExpression();
-
-  @NotNull
-  EnsoIdentifierRule getIdentifierRule();
+  PsiElement getIdentifier();
 
 }

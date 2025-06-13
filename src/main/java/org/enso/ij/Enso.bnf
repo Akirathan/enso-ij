@@ -8,6 +8,7 @@
 {
   parserClass="org.enso.ij.parser.EnsoParser"
   parserUtilClass="org.enso.ij.parser.EnsoParserUtil"
+  psiImplUtilClass="org.enso.ij.psi.EnsoPsiUtil"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
@@ -75,8 +76,9 @@ eol_with_comment ::= EOL [MULTILINE_COMMENT]
 
 module ::= import_or_export* binding*
 
-identifier ::= IDENTIFIER {
-  implements="org.enso.ij.psi.EnsoNamedElement"
+identifier_rule ::= IDENTIFIER {
+  //implements="org.enso.ij.psi.EnsoNamedElement"
+  //methods=[getName setName getNameIdentifier]
 }
 
 private import_or_export ::= (
@@ -88,18 +90,18 @@ private import_or_export ::= (
 )
 
 fully_qualified_name ::=
-    identifier (DOT identifier)*
+    identifier_rule (DOT identifier_rule)*
 
 import_rule ::= IMPORT fully_qualified_name
-from_import ::= FROM fully_qualified_name IMPORT (identifier_list|ALL) [AS identifier]
+from_import ::= FROM fully_qualified_name IMPORT (identifier_list|ALL) [AS identifier_rule]
 export_rule ::= EXPORT fully_qualified_name
 from_export ::= FROM fully_qualified_name EXPORT identifier_list
 
-private identifier_list ::= identifier (COMMA identifier)*
+private identifier_list ::= identifier_rule (COMMA identifier_rule)*
 
-type_definition ::= TYPE identifier type_body
+type_definition ::= TYPE identifier_rule type_body
 type_body ::= type_constructor* method*
-type_constructor ::= identifier (argument_def)*
+type_constructor ::= identifier_rule (argument_def)*
 
 operator ::= PLUS|MINUS|STAR|DIV|AND|OR
 
@@ -110,15 +112,15 @@ binding ::= (
 )
 
 assignment ::= (
-  identifier EQUALS expression
+  identifier_rule EQUALS expression
 )
 
-method ::= identifier (argument_def)* EQUALS method_body
-extension_method ::= identifier DOT identifier (argument_def)* EQUALS method_body
+method ::= identifier_rule (argument_def)* EQUALS method_body
+extension_method ::= identifier_rule DOT identifier_rule (argument_def)* EQUALS method_body
 
-argument_def ::= identifier [type_ascription] (EQUALS default_value)?
+argument_def ::= identifier_rule [type_ascription] (EQUALS default_value)?
 default_value ::= expression
-type_ascription ::= COLON identifier
+type_ascription ::= COLON identifier_rule
 
 method_body ::= expression*
 

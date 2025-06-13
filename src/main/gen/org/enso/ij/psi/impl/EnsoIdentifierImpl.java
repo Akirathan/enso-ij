@@ -10,15 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.enso.ij.psi.EnsoTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.enso.ij.psi.*;
+import com.intellij.util.IncorrectOperationException;
 
 public class EnsoIdentifierImpl extends ASTWrapperPsiElement implements EnsoIdentifier {
 
   public EnsoIdentifierImpl(@NotNull ASTNode node) {
     super(node);
-  }
-
-  public void accept(@NotNull EnsoVisitor visitor) {
-    visitor.visitIdentifier(this);
   }
 
   @Override
@@ -31,6 +28,21 @@ public class EnsoIdentifierImpl extends ASTWrapperPsiElement implements EnsoIden
   @NotNull
   public PsiElement getIdentifier() {
     return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  public String getName() {
+    return EnsoPsiUtil.getName(this);
+  }
+
+  @Override
+  public PsiElement setName(String name) throws IncorrectOperationException {
+    return EnsoPsiUtil.setName(this, name);
+  }
+
+  @Override
+  public PsiElement getNameIdentifier() {
+    return EnsoPsiUtil.getNameIdentifier(this);
   }
 
 }

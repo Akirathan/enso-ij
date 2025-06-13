@@ -35,8 +35,8 @@ public class EnsoArgumentDefImpl extends ASTWrapperPsiElement implements EnsoArg
 
   @Override
   @NotNull
-  public EnsoIdentifier getIdentifier() {
-    return findNotNullChildByClass(EnsoIdentifier.class);
+  public EnsoIdentifierRule getIdentifierRule() {
+    return findNotNullChildByClass(EnsoIdentifierRule.class);
   }
 
   @Override

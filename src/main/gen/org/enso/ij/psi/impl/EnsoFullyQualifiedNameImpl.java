@@ -29,8 +29,8 @@ public class EnsoFullyQualifiedNameImpl extends ASTWrapperPsiElement implements 
 
   @Override
   @NotNull
-  public List<EnsoIdentifier> getIdentifierList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoIdentifier.class);
+  public List<EnsoIdentifierRule> getIdentifierRuleList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoIdentifierRule.class);
   }
 
 }

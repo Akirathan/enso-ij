@@ -35,8 +35,8 @@ public class EnsoExtensionMethodImpl extends ASTWrapperPsiElement implements Ens
 
   @Override
   @NotNull
-  public List<EnsoIdentifier> getIdentifierList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoIdentifier.class);
+  public List<EnsoIdentifierRule> getIdentifierRuleList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoIdentifierRule.class);
   }
 
   @Override

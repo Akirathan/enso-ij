@@ -11,7 +11,7 @@ public interface EnsoExtensionMethod extends PsiElement {
   List<EnsoArgumentDef> getArgumentDefList();
 
   @NotNull
-  List<EnsoIdentifier> getIdentifierList();
+  List<EnsoIdentifierRule> getIdentifierRuleList();
 
   @NotNull
   EnsoMethodBody getMethodBody();

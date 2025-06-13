@@ -21,7 +21,7 @@ public interface EnsoTypes {
   IElementType FROM_EXPORT = new EnsoElementType("FROM_EXPORT");
   IElementType FROM_IMPORT = new EnsoElementType("FROM_IMPORT");
   IElementType FULLY_QUALIFIED_NAME = new EnsoElementType("FULLY_QUALIFIED_NAME");
-  IElementType IDENTIFIER = new EnsoElementType("IDENTIFIER");
+  IElementType IDENTIFIER_RULE = new EnsoElementType("IDENTIFIER_RULE");
   IElementType ID_OR_LITERAL = new EnsoElementType("ID_OR_LITERAL");
   IElementType IMPORT_RULE = new EnsoElementType("IMPORT_RULE");
   IElementType LITERAL = new EnsoElementType("LITERAL");
@@ -47,6 +47,7 @@ public interface EnsoTypes {
   IElementType EQUALS = new EnsoTokenType("=");
   IElementType EXPORT = new EnsoTokenType("export");
   IElementType FROM = new EnsoTokenType("from");
+  IElementType IDENTIFIER = new EnsoTokenType("IDENTIFIER");
   IElementType IMPORT = new EnsoTokenType("import");
   IElementType LEFT_PAREN = new EnsoTokenType("(");
   IElementType MINUS = new EnsoTokenType("-");
@@ -105,8 +106,8 @@ public interface EnsoTypes {
       else if (type == FULLY_QUALIFIED_NAME) {
         return new EnsoFullyQualifiedNameImpl(node);
       }
-      else if (type == IDENTIFIER) {
-        return new EnsoIdentifierImpl(node);
+      else if (type == IDENTIFIER_RULE) {
+        return new EnsoIdentifierRuleImpl(node);
       }
       else if (type == ID_OR_LITERAL) {
         return new EnsoIdOrLiteralImpl(node);

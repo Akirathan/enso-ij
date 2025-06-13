@@ -10,12 +10,8 @@ import org.jetbrains.annotations.Nullable;
 public interface EnsoNamedElement extends PsiNameIdentifierOwner {
 
   @Override
-  default @Nullable PsiElement getNameIdentifier() {
-    return null;
-  }
+  @Nullable PsiElement getNameIdentifier();
 
   @Override
-  default PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    return null;
-  }
+  PsiElement setName(@NotNull String name) throws IncorrectOperationException;
 }

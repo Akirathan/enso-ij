@@ -11,6 +11,6 @@ public interface EnsoFromExport extends PsiElement {
   EnsoFullyQualifiedName getFullyQualifiedName();
 
   @NotNull
-  List<EnsoIdentifier> getIdentifierList();
+  List<EnsoIdentifierRule> getIdentifierRuleList();
 
 }

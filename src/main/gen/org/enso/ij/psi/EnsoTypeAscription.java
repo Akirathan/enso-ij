@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface EnsoTypeAscription extends PsiElement {
 
   @NotNull
-  EnsoIdentifier getIdentifier();
+  EnsoIdentifierRule getIdentifierRule();
 
 }

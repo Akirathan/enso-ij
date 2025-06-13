@@ -11,14 +11,14 @@ import static org.enso.ij.psi.EnsoTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.enso.ij.psi.*;
 
-public class EnsoMethodImpl extends ASTWrapperPsiElement implements EnsoMethod {
+public class EnsoIdentifierRuleImpl extends ASTWrapperPsiElement implements EnsoIdentifierRule {
 
-  public EnsoMethodImpl(@NotNull ASTNode node) {
+  public EnsoIdentifierRuleImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull EnsoVisitor visitor) {
-    visitor.visitMethod(this);
+    visitor.visitIdentifierRule(this);
   }
 
   @Override
@@ -29,20 +29,8 @@ public class EnsoMethodImpl extends ASTWrapperPsiElement implements EnsoMethod {
 
   @Override
   @NotNull
-  public List<EnsoArgumentDef> getArgumentDefList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, EnsoArgumentDef.class);
-  }
-
-  @Override
-  @NotNull
-  public EnsoIdentifierRule getIdentifierRule() {
-    return findNotNullChildByClass(EnsoIdentifierRule.class);
-  }
-
-  @Override
-  @NotNull
-  public EnsoMethodBody getMethodBody() {
-    return findNotNullChildByClass(EnsoMethodBody.class);
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
   }
 
 }

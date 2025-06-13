@@ -11,6 +11,6 @@ public interface EnsoTypeConstructor extends PsiElement {
   List<EnsoArgumentDef> getArgumentDefList();
 
   @NotNull
-  EnsoIdentifier getIdentifier();
+  EnsoIdentifierRule getIdentifierRule();
 
 }

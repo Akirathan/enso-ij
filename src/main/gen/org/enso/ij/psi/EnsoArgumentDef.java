@@ -11,7 +11,7 @@ public interface EnsoArgumentDef extends PsiElement {
   EnsoDefaultValue getDefaultValue();
 
   @NotNull
-  EnsoIdentifier getIdentifier();
+  EnsoIdentifierRule getIdentifierRule();
 
   @Nullable
   EnsoTypeAscription getTypeAscription();

@@ -29,8 +29,8 @@ public class EnsoTypeDefinitionImpl extends ASTWrapperPsiElement implements Enso
 
   @Override
   @NotNull
-  public EnsoIdentifier getIdentifier() {
-    return findNotNullChildByClass(EnsoIdentifier.class);
+  public EnsoIdentifierRule getIdentifierRule() {
+    return findNotNullChildByClass(EnsoIdentifierRule.class);
   }
 
   @Override
